@@ -1,0 +1,124 @@
+NEW GAME
+LOAD GAME
+EXIT
+CONTINUE
+RESET
+OPTIONS
+CTRL+R ... RESET
+ESC ... EXIT
+ON
+OFF
+LANGUAGE
+MUSIC
+SOUND
+TIMER
+VIDEO
+FULLSCREEN
+VSYNC
+BACK
+SUB WEAPON
+ITEM
+KEY
+--- ALL CLEAR ---
+TIME
+TREASURE
+- ORIGINAL GAME STAFF -
+SPRITES
+PROGRAM
+TEST PLAYER
+- SPECIAL THANKS -
+SOUND EFFECTS
+ENGLISH TRANSLATION
+
+
+
+
+
+
+
+
+
+THE END
+Saving...
+Oops! An error occurred.
+Load the game where you saved,
+and save at the save point.
+1:Dodo's Den
+2:Bat's Cave
+3:Golgia's Ruins
+4:Gyra's Bog
+5:Lolidra's Cavern
+6:Devil's Lair
+7:Garm's Grotto
+8:Hydra's Throne
+Silver Bolt
+Golden Axe
+Boomerang
+Fireball
+Bomb
+
+Blue Scroll
+Red Scroll
+Wing Boots
+Hydra Ring
+Silk Cape
+Gorgon Ring
+Catfish Gem
+Power Band
+Insmouth Gill
+Insmouth Fin
+Red Boots
+Green Scroll
+Copper Pick
+Hunter's Shield
+Gold Gem
+Chime
+Silver Pick
+Gasmask
+Right Coin
+Left Coin
+Cross
+Candle
+Red Coin
+Roc Feather
+Dagon Idol
+Blue Key
+Red Key
+Blue Coin
+Dodo Key
+Bat Key
+Golgia Key
+Gyra Key
+Lolidra Key
+Devil Key
+Garm Key
+Hydra Key
+found!
+Hurts a certain beast...
+Hold the attack key!
+Grants double-jump.
+Resist poison.
+Resist paralysis.
+Resist petrification.
+Resist quake.
+Climb ladders faster!
+Resist drowning.
+Move faster in water.
+Walk on magma.
+Upgrades subweapon.
+Break through blocks.
+Blocks bullets.
+Raises item chance.
+Rings when near treasure.
+Break blocks in 1 hit.
+Filters poisonous gas.
+For the right mechanism.
+For the left mechanism.
+The vampire's downfall!
+Lights up the dark.
+For a red mechanism.
+Float on air currents.
+Bane of Insmouth!
+Opens a blue door.
+Opens a red door.
+For a blue mechanism.
