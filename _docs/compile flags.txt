@@ -1,0 +1,32 @@
+Each platform should define a flag identifying itself. (_3DS, _PSP, _WII)
+
+_DEBUG
+Has no specific purpose. Used only for development.
+
+_NO_TEMP_SAVE
+Disables writing backup saves between rooms. (Ignored if _DEBUG is enabled)
+Set on platforms with slow storage where there is a great delay between rooms.
+
+_NO_EXIT
+Removes the exit option from menus.
+
+_NO_LERP
+Disabled linear interpolation, reducing the amount of float computations.
+Motion will look choppy on framerates higher or lower than 60.
+Set for consoles that run at a fixed 60fps.
+
+_NO_FRAMESKIP
+Disables variable frame rate.
+Set for consoles that run at a fixed 60fps.
+
+_NTSC
+Uses 59.94 instead of 60 as the base frame rate.
+
+_HAS_FULLSCREEN
+Enables the Fullscreen section in the options menu.
+
+_HAS_VSYNC
+Enables the Vsync section in the options menu.
+
+_HAS_VIDEOMODE
+Enables the Video Mode section in the options menu.
