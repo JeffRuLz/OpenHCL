@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<app version="1">
+  <name>OpenHCL</name>
+  <coder>JeffRuLz</coder>
+  <version>1.0</version>
+  <release_date>2020</release_date>
+  <short_description>Hydra Castle Labyrinth Port</short_description> 
+  <long_description>
+    A fanmade port of E. (Buster) Hashimoto's Hydra Castle Labyrinth.
+  </long_description> 
+<ahb_access />
+</app>
