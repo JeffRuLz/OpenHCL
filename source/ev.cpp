@@ -5,12 +5,12 @@
 #include <string.h>
 
 #include "enemies/bat.hpp"
-#include "enemies/batboss.hpp"
 #include "enemies/bee.hpp"
 #include "enemies/boar.hpp"
 #include "enemies/crushtrap.hpp"
 #include "enemies/devil.hpp"
 #include "enemies/dodo.hpp"
+#include "enemies/gargoyle.hpp"
 #include "enemies/garm.hpp"
 #include "enemies/gas.hpp"
 #include "enemies/ghost.hpp"
@@ -314,7 +314,7 @@ bool loadEv(int index)
 				case 58: o = enemyList.add(new Tongue(x,y,_parseNumber(section[5],4))); break;
 				case 59: o = enemyList.add(new Piranha(x,y,_parseNumber(section[5],4))); break;
 				case 60: o = enemyList.add(new GuruGuru(x,y,_parseNumber(section[5],3),_parseNumber(section[5],4))); break;
-				case 61: o = enemyList.add(new BatBoss(x,y,_parseNumber(section[6],0))); break;
+				case 61: o = enemyList.add(new Gargoyle(x,y,_parseNumber(section[6],0))); break;
 				case 62:
 				{
 					switch (subtype)
