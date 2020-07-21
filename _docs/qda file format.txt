@@ -1,0 +1,57 @@
+Hydra Castle Labyrinth stores its graphics in one file called "bmp.qda". This is a QuadrupleD Archive, which is a simple container file.
+Specifications are detailed in the official QuadrupleD manual.
+
+QuadrupleD website: http://karen.saiin.net/~hayase/
+
+=== QDA File Header ===
+The file starts with one header for the QDA file itself. It is 265 bytes in size.
+
+Offset | Size | Description
+---------------------------
+0000   | 4    | Compress. 1 if the Compress archive is a compressed archive, 0 otherwise.
+0004   | 4    | File Signature. 'QDA0' (0x51 0x44 0x41 0x30)
+0008   | 4    | Number of files contained in the archive.
+000C   | 244  | Reserved for future expansion.
+
+=== Data Headers ===
+After the QDA file header there are many headers containing information about the files stored in the QDA file. One for each "Number of files" listed above. They are 268 bytes in size each.
+
+Offset | Size | Description
+---------------------------
+0000   | 4    | File position from the beginning of the QDA file.
+0004   | 4    | Size (in bytes) of the data in the QDA file.
+0008   | 4    | Size of the data after decompression (in bytes.)
+000C   | 256  | File name. No null character at the end. Files are identified by the file name.
+
+=== Files ===
+See the 'bmp_qda' folder.
+
+boss01.bmp
+boss02.bmp
+boss03.bmp
+boss04.bmp
+boss05.bmp
+boss06.bmp
+boss07.bmp
+chr20.BMP
+chr20x40.BMP
+chr32.BMP
+chr60x20.bmp
+chr64.BMP
+dark.bmp
+ending01.bmp
+ene01.bmp
+font8x8-01.bmp
+font8x8-kana.bmp
+items.bmp
+lboss01.bmp
+mychr.bmp
+null.bmp
+stage01.bmp
+stage02.bmp
+stage03.bmp
+stage04.bmp
+stage05.bmp
+stage08.bmp
+status.bmp
+title01.BMP

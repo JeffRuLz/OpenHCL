@@ -1,0 +1,39 @@
+Each screen has two .map files: one for the background (###a.map) and one for the foreground (###.map).
+
+The ID number for each screen is hardcoded. See 'stagedata.h'.
+
+Every screen has a 3 tile border surrounding it. So while the visible area is 16x12 tiles, the actual map data is 22x18 tiles. See 'map sample.png' for an example.
+
+018.map is not a map file, it is instead a backup save file.
+
+=== Header ===
+Offset | Size | Description
+---------------------------
+0000   | 4    | Map width in tiles. (always 22)
+0004   | 4    | Map height in tiles. (always 18)
+0008   | 4    | Pixel width of one tile. (always 20)
+000C   | 4    | Pixel height of one tile. (always 20)
+0010   | 4    | Tileset width in tiles. (always 16)
+0014   | 4    | Tileset height in tiles. (always 12)
+
+=== Tile Data ===
+Begins at 0018
+Size = [Map width] * [Map height] * 2 (always 792)
+Each tile is stored in 2 bytes, however in Hydra Castle Labyrinth the second byte is not needed.
+
+=== Collision tiles ===
+Certain foreground tiles are used for collision.
+
+Index | Description
+-------------------
+    3 | Ladder
+    5 | Ladder (bottom)
+   17 | Lava
+   16 | Spikes
+   21 | Water
+   32 | Spikes (pointing down)
+   48 | Underwater spike
+   49 | Underwater spike (pointing right)
+   50 | Underwater spike (pointing left)
+  184 | Ladder top (also solid)
+>=128 | All tiles on the bottom half of the sheet are considered solid blocks.

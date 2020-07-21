@@ -1,0 +1,23 @@
+"EV" files stores object information.
+These files are inside of "meikyu.exe". They can be extracted with a program like 7-zip, at location ".rsrc/0/TEXT/". OpenHCL stores them in "./data/EV/".
+They are named "EV###", with no extension, with the room id for the number.
+
+Each line contains data for one object.
+Examples:
+8,0000,0000,0014,0007,0051-A-001,*
+8,0000,0000,0008,0005,0042-A-000-M00200000,*
+8,2041,0000,0009,0010,0123-D-001-2041-1048,08-017-007-003-0
+
+[A],[BBBB],[CCCC],[DDDD],[EEEE],[FFFF]-[G]-[HHH]{-[{M}IIII{IIII}]},[*]
+
+A - Unknown
+B - Spawn flag. Object spawns when this flag is set, or if it is already set.
+C - Despawn flag. If this flag is set, do not spawn this object.
+D - X position (in tiles)
+E - Y position (in tiles)
+F - Object ID
+G - Unknown
+H - Object subtype
+I - Optional, object specific.
+I - {M} - If it begins with M, shift the object in pixels (MXXXXYYYY)
+* - Object specific data. '*' if none is present.

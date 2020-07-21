@@ -1,0 +1,138 @@
+Hydra Castle Labyrinth has two save files, both using the same format:
+
+'./data/save.tmp' - Main save file. Updated at save points.
+'./map/018.map' - Backup save file. Updated when changing rooms. Deleted at save points and when the game ends properly. If it exists, load this instead of the main save.
+
+Save files can be separated into three parts: a header, flag data, and a footer.
+
+Note: While there is space for 4500 flags, 4000-4499 are temporary and are reset when the room changes.
+
+=== Header ===
+Offset | Size | Description
+---------------------------
+0000   | 4    | Health
+0004   | 4    | Max health
+0008   | 4    | Ammo
+000C   | 4    | Max ammo
+0010   | 4    | Selected weapon. (0 = Arrow/none, 1 = Axe, 2 = Boomerang, 3 = Fireball, 4 = Bomb)	
+
+=== Flags ===
+Offset | Flag | Description
+--------------------
+0014   |	0 | Unknown, always resets to 1
+...
+03FC   | 1000 | Unlocked Door 1
+03FD   | 1001 | Beaten Boss 1
+03FE   | 1002 | Unlocked Door 2
+03FF   | 1003 | Defeated all enemies in level 2 (1,3)
+0400   | 1004 | Defeated all enemies in level 2 (2,4)
+0401   | 1005 | Beaten Boss 2
+0402   | 1006 | Unlocked Door 3
+0403   | 1007 | Unlocked Door 4
+0404   | 1008 | Block in room 079
+0405   | 1009 | Block in level 3 (2,2)
+0406   | 1010 | Block in level 4 (6,2)(128)
+0407   | 1011 | Defeat all enemies in level 3 (1,1)
+0408   | 1012 | Defeat all enemies in level 3 (5,1)
+0409   | 1013 | Beaten Boss 3
+040A   | 1014 | 
+040B   | 1015 | 
+040C   | 1016 | 
+040D   | 1017 | Block in level 4 (3,2)(125)
+040E   | 1018 | Block in level 4 (5,1)(131)
+040F   | 1019 | Defeat all enemies in level 4 (8,2)(134)
+0410   | 1020 | Defeat all enemies in level 4 (9,1)(136)
+0411   | 1021 | Beaten Boss 4
+0412   | 1022 | Unlock Door 6
+0413   | 1023 | Create Block in level 2 (2,2)
+0414   | 1024 | Activate Green Switch in level 2 (2,2)
+0415   | 1025 | Button in level 6 (4,5)
+0416   | 1026 | Switch in level 6
+0417   | 1027 | Ladder in level 6
+0418   | 1028 | Block in level 6 (6,4)
+0419   | 1029 |
+041A   | 1030 | Block in level 6 (5,2)
+041B   | 1031 | Beaten Boss 6
+041C   | 1032 | Unlock Door 5
+041D   | 1033 | Block in level 5 (3,2)(161)
+041E   | 1034 | Block in level 5 (5,2)(164)
+041F   | 1035 | Chest in level 5 (4,1)(162)
+0420   | 1036 | Chest in level 5 (4,4)(174)
+0421   | 1037 | Block in level 5 (2,4)(169)
+0422   | 1038 | Beaten Boss 5
+0423   | 1039 | Unlock Door 7
+0424   | 1040 | Block in level 7 (3,1)
+0425   | 1041 | Chest in level 7 (4,1)
+0426   | 1042 | Ladder in level 7
+0427   | 1043 | Right Switch
+0428   | 1044 | Left Switch
+0429   | 1045 | Chest in level 7 (8,3)
+042A   | 1046 | Block in level 7 (7,3)
+042B   | 1047 | Defeat Garm Boss
+042C   | 1048 | Unlock Door 8
+042D   | 1049 | Generator (Top Left)
+042E   | 1050 | Generator (Top Right)
+042F   | 1051 | Electric Gate (Top)
+0430   | 1052 | Dodo Miniboss (Top Left)
+0431   | 1053 | Dodo Miniboss (Top Right)
+0432   | 1054 | Generator (Bottom Left)
+0433   | 1055 | Generator (Bottom Right)
+0434   | 1056 | Electric Gate (Bottom)
+0435   | 1057 | Dodo Miniboss (Bottom Left)
+0436   | 1058 | Dodo Miniboss (Bottom Right)
+...
+07E4   | 2000 | Arrow	
+07E5   | 2001 | Axe	
+07E6   | 2002 | Boomerang	
+07E7   | 2003 | Fireball
+07E8   | 2004 | Bomb	
+07E9   | 2005 | 	
+07EA   | 2006 | Blue Scroll	
+07EB   | 2007 | Red Scroll	
+07EC   | 2008 | Blue Boots	
+07ED   | 2009 | Purple Ring	
+07EE   | 2010 | Cape	
+07EF   | 2011 | Green Ring	
+07F0   | 2012 | Catfish Gem (Necklace thing)
+07F1   | 2013 | Power Band	
+07F2   | 2014 | Gill (Ear-like thing)
+07F3   | 2015 | Fin
+07F4   | 2016 | Red Boots	
+07F5   | 2017 | Green Scroll	
+07F6   | 2018 | Copper Pick	
+07F7   | 2019 | Shield
+07F8   | 2020 | Gold Gem
+07F9   | 2021 | Bell	
+07FA   | 2022 | Silver Pick	
+07FB   | 2023 | Gasmask	
+07FC   | 2024 | Right Coin	(2nd to end)
+07FD   | 2025 | Left Coin (3rd to end)
+07FE   | 2026 | Cross	
+07FF   | 2027 | Candle	
+0800   | 2028 | Red Coin	
+0801   | 2029 | Roc Feather	
+0802   | 2030 | Dragon Idol	
+0803   | 2031 | Blue Key	
+0804   | 2032 | Red Key	
+0805   | 2033 | Blue Coin	
+0806   | 2034 | Key 1	
+0807   | 2035 | Key 2	(Also opens door in boss 1 room)
+0808   | 2036 | Key 3	(Also opens door in boss 2 room)
+0809   | 2037 | Key 4	(ect)
+080A   | 2038 | Key 5
+080B   | 2039 | Key 6
+080C   | 2040 | Key 7
+080D   | 2041 | Key 8
+...
+11A7   | 4499 | 
+
+=== Footer ===
+Offset | Size | Description
+---------------------------
+11A8   | 4	  | Unused
+11AC   | 4    | Playtime in number of frames (60 per second.) Menus are not counted.
+11B0   | 4    | Hero X position.
+11B4   | 4    | Hero Y position.
+11B8   | 4    | Current level. (0 = Overworld, 1 = Level 1, 2 = Level 2, ect)
+11BC   | 4    | Screen index. 
+11C0   | 4    | Hero's direction. (0 = Right, 1 = Left)
