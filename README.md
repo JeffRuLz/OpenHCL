@@ -24,7 +24,7 @@ Note: to run the game after compiling you may need the assets from the release p
 
 #### PSP
 - Install [PSPSDK](https://github.com/pspdev/pspsdk). ([Minimalist PSPSDK](https://sourceforge.net/projects/minpspw/))
-- Install the [Devpaks](https://sourceforge.net/projects/minpspw/files/devpak%20%28posix%29/devpaks%20%28cygwin_nix%29/). (In Minimalist PSPSDK, keep the box checked during setup.)
+- Install the [libvorbis and libogg devpaks](https://sourceforge.net/projects/minpspw/files/devpak%20%28posix%29/devpaks%20%28cygwin_nix%29/). (In Minimalist PSPSDK, keep the 'Basic Devpaks' box checked during setup.)
 - Run `make psp`
 
 #### Wii
