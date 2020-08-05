@@ -18,6 +18,7 @@ Note: to run the game after compiling you may need the assets from the release p
 
 #### 3DS
 - Install [DevkitPro](https://devkitpro.org/wiki/Getting_Started) with devkitARM and libctru.
+- Install [bannertool](https://github.com/Steveice10/bannertool/releases)
 - Install vorbisidec: `pacman -S 3ds-libvorbisidec`
 - To just build a 3dsx file, run: `make 3ds`
 - To build a cia file, install [MakeROM](https://github.com/3DSGuy/Project_CTR/releases) and run `make cia`

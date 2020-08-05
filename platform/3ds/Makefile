@@ -64,7 +64,9 @@ CFLAGS	:=	-g -Wall -O2 -mword-relocations \
 			$(ARCH)
 
 CFLAGS	+=	$(INCLUDE) -DARM11 -D_3DS
-CFLAGS  += -D_NO_FRAMESKIP -D_NO_LERP -D_NO_EXIT
+CFLAGS  += -D_NO_FRAMESKIP -D_NO_LERP 
+#-D_NO_EXIT
+#CFLAGS  += -D_DEBUG
 #CFLAGS  += -D_NO_TEMP_SAVE
 
 CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions -std=gnu++11
@@ -177,11 +179,11 @@ endif
 
 #---------------------------------------------------------------------------------
 all: $(BUILD) $(GFXBUILD) $(DEPSDIR) $(ROMFS_T3XFILES) $(T3XHFILES)
-	
-$(BUILD): $(TARGET).smdh
-	@mkdir -p $@
 	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
 
+$(BUILD): $(TARGET).smdh 
+	@mkdir -p $@
+	
 ifneq ($(GFXBUILD),$(BUILD))
 $(GFXBUILD):
 	@mkdir -p $@
@@ -213,6 +215,7 @@ $(TARGET).smdh: $(ICON)
 	@echo built ... $(TARGET).smdh
 
 cia: $(BUILD) $(BANNER)
+	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
 	@makerom -f cia -target t -exefslogo -o $(TARGET).cia -elf $(TARGET).elf -rsf $(CIA_RSF) -banner $(BANNER) -icon $(CIA_SMDH)
 	@echo built ... $(TARGET).cia
 #---------------------------------------------------------------------------------

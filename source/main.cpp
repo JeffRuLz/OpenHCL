@@ -5,6 +5,7 @@
 
 #include "ini.hpp"
 #include "game.hpp"
+#include "text.hpp"
 
 #ifdef _3DS
   #include "inventory.hpp"
@@ -25,6 +26,7 @@ int main(int argc, char* argv[])
 
 	gameSetLanguage(sys_GetLanguage());
 	iniLoad();
+	loadText(gameGetLanguage());
 
 	gfx_Start();
 	
@@ -98,6 +100,6 @@ int main(int argc, char* argv[])
 	aud_Exit();
 	gfx_Exit();
 	sys_Exit();
-	
+
 	return 0;
 }

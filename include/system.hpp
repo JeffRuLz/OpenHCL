@@ -8,6 +8,7 @@ extern char const* SYS_TEMPSAVEPATH;
 enum {
 	LANG_JAPANESE = 0,
 	LANG_ENGLISH = 1,
+	LANG_KOREAN = 2,
 	LANG_END
 };
 

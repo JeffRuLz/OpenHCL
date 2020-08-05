@@ -96,7 +96,7 @@ FILE* ExtractFromQDAStream(FILE* Source, char const* ID)
 	AnsiLowerCase(ID, IDlower);
 
 	fseek(Source, 0, SEEK_SET);
-	for (i = 0; i < qfh.DataCount - 1; i++)
+	for (i = 0; i < qfh.DataCount; i++)
 	{
 		AnsiLowerCase(qdhs[i].ID, qdhs[i].ID);
 		if (strcmp(qdhs[i].ID, IDlower) == 0)

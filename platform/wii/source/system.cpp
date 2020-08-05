@@ -78,6 +78,7 @@ int sys_GetLanguage()
 	switch (CONF_GetLanguage())
 	{
 		case CONF_LANG_JAPANESE: ret = LANG_JAPANESE; break;
+		case CONF_LANG_KOREAN:	 ret = LANG_KOREAN; break;
 		case CONF_LANG_ENGLISH:  ret = LANG_ENGLISH; break;
 		case CONF_LANG_GERMAN:   ret = LANG_ENGLISH; break;
 		case CONF_LANG_FRENCH:   ret = LANG_ENGLISH; break;

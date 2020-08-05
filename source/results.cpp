@@ -64,11 +64,11 @@ void resultsDraw(float subFrame, float depth)
 	
 	drawTextBold(TEXT_TIME, 160, 64, TEXT_COLOR_YELLOW, true);
 	sprintf(str, "%02d:%02d:%02d", hours, minutes, seconds);
-	drawTextBold(str, 160, 72, TEXT_COLOR_WHITE, true);
+	drawBold(str, 160, 72, TEXT_COLOR_WHITE, true);
 
 	drawTextBold(TEXT_TREASURE, 160, 96, TEXT_COLOR_YELLOW, true);
 	sprintf(str, "%02d%%", treasure);
-	drawTextBold(str, 160, 104, TEXT_COLOR_WHITE, true);
+	drawBold(str, 160, 104, TEXT_COLOR_WHITE, true);
 
 	//curtain
 	if (timer >= 500)

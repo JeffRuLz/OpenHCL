@@ -54,12 +54,10 @@ unsigned long sys_GetMillisecond()
 */
 int sys_MainLoop()
 {
-	bool ret = aptMainLoop();
-
 	if (quitGame)
 		return false;
 
-	return ret;
+	return aptMainLoop();
 }
 
 void sys_QuitGame()
@@ -77,6 +75,7 @@ int sys_GetLanguage()
 	switch (l)
 	{
 		case CFG_LANGUAGE_JP: ret = LANG_JAPANESE; break;
+		case CFG_LANGUAGE_KO: ret = LANG_KOREAN; break;
 		case CFG_LANGUAGE_EN: ret = LANG_ENGLISH; break;
 		case CFG_LANGUAGE_FR: ret = LANG_ENGLISH; break;
 		case CFG_LANGUAGE_DE: ret = LANG_ENGLISH; break;

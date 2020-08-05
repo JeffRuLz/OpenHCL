@@ -30,6 +30,7 @@ int gfx_Init()
 	  consoleInit(GFX_BOTTOM, NULL);
 	#endif
 
+	//blank texture for rectangles
 	blankTex = new C3D_Tex;
 	C3D_TexInit(blankTex, 8, 8, GPU_RGBA8);
 	u32* blankPix = (u32*)linearAlloc(8*8*sizeof(u32));

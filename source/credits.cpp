@@ -8,30 +8,30 @@
 
 static char credits[][40] =
 {
-	"- ORIGINAL GAME STAFF -", //0
+	"&TEXT_STAFF", //- ORIGINAL GAME STAFF -
 	"",
 	"",
 	"",
 	"",
-	"SPRITES", //5
+	"&TEXT_SPRITES", //SPRITES
 	"BUSTER",
 	"",
 	"",
-	"PROGRAM", //9
+	"&TEXT_PROGRAM", //PROGRAM
 	"BUSTER",
 	"",
 	"",
-	"MUSIC", //13
+	"&TEXT_MUSIC", //MUSIC
 	"MATAJUUROU",
 	"",
 	"",
-	"TEST PLAYER", //17
+	"&TEXT_TEST_PLAYER", //TEST PLAYER
 	"ZAC",
 	"",
 	"",
 	"",
 	"",
-	"- SPECIAL THANKS -", //23
+	"&TEXT_SPECIAL_THANKS", //- SPECIAL THANKS -
 	"",
 	"",
 	"",
@@ -48,7 +48,7 @@ static char credits[][40] =
 	"NARUTO",
 	"",
 	"",
-	"SOUND EFFECTS", //40
+	"&TEXT_SOUND_EFFECTS", //SOUND EFFECTS
 	"OSABISHIYUUKI",
 	"",
 	"",
@@ -63,12 +63,16 @@ static char credits[][40] =
 	"",
 	"",
 	"",
-	"PROGRAM", //55
+	"&TEXT_PROGRAM", //PROGRAM
 	"JEFFRULZ",
 	"",
 	"",
-	"ENGLISH TRANSLATION", //59
+	"&TEXT_ENGLISH_TRANSLATION", //ENGLISH TRANSLATION
 	"GARY THE KRAMPUS",
+	"",
+	"",
+	"&TEXT_KOREAN_TRANSLATION", //KOREAN TRANSLATION
+	"DDINGHOYA",
 	"",
 	"",
 
@@ -133,17 +137,6 @@ void creditsStart()
 	aud_FreeMusic(music[bgmMusic]);
 	music[bgmMusic] = aud_LoadMusic("ending");
 	aud_PlayMusic(music[bgmMusic], false);
-
-	//translation
-	sprintf(credits[0], "%s", getText(TEXT_STAFF));
-	sprintf(credits[5], "%s", getText(TEXT_SPRITES));
-	sprintf(credits[9], "%s", getText(TEXT_PROGRAM));
-	sprintf(credits[13], "%s", getText(TEXT_MUSIC));
-	sprintf(credits[17], "%s", getText(TEXT_TEST_PLAYER));
-	sprintf(credits[23], "%s", getText(TEXT_SPECIAL_THANKS));
-	sprintf(credits[40], "%s", getText(TEXT_SOUND_EFFECTS));
-	sprintf(credits[55], "%s", getText(TEXT_PROGRAM));
-	sprintf(credits[59], "%s", getText(TEXT_ENGLISH_TRANSLATION));
 }
 
 void creditsUpdate()
@@ -179,7 +172,32 @@ void creditsDraw(float subFrame, float depth)
 			}
 			else
 			{
-				drawTextBold(line, 160, y, textCol, true);
+				if (line[0] != '&')
+				{
+					drawTextBold(line, 160, y, textCol, true);
+				}
+				else
+				{
+					if (strcmp(line, "&TEXT_STAFF") == 0)
+						drawTextBold(TEXT_STAFF, 160, y, textCol, true);
+					else if (strcmp(line, "&TEXT_SPRITES") == 0)
+						drawTextBold(TEXT_SPRITES, 160, y, textCol, true);
+					else if (strcmp(line, "&TEXT_PROGRAM") == 0)
+						drawTextBold(TEXT_PROGRAM, 160, y, textCol, true);
+					else if (strcmp(line, "&TEXT_MUSIC") == 0)
+						drawTextBold(TEXT_MUSIC, 160, y, textCol, true);
+					else if (strcmp(line, "&TEXT_TEST_PLAYER") == 0)
+						drawTextBold(TEXT_TEST_PLAYER, 160, y, textCol, true);
+					else if (strcmp(line, "&TEXT_SPECIAL_THANKS") == 0)
+						drawTextBold(TEXT_SPECIAL_THANKS, 160, y, textCol, true);
+					else if (strcmp(line, "&TEXT_SOUND_EFFECTS") == 0)
+						drawTextBold(TEXT_SOUND_EFFECTS, 160, y, textCol, true);
+					else if (strcmp(line, "&TEXT_ENGLISH_TRANSLATION") == 0)
+						drawTextBold(TEXT_ENGLISH_TRANSLATION, 160, y, textCol, true);
+					else if (strcmp(line, "&TEXT_KOREAN_TRANSLATION") == 0)
+						drawTextBold(TEXT_KOREAN_TRANSLATION, 160, y, textCol, true);
+				}
+
 				textCol = TEXT_COLOR_WHITE;
 			}
 		}

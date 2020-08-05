@@ -4,6 +4,7 @@
 #include "audio.hpp"
 #include "map.hpp"
 
+void loadTitleAssets();
 void loadAssets();
 void freeAssets();
 

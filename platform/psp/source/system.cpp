@@ -57,6 +57,7 @@ int sys_GetLanguage()
 		switch (l)
 		{
 			case PSP_SYSTEMPARAM_LANGUAGE_JAPANESE:   ret = LANG_JAPANESE; break;
+			case PSP_SYSTEMPARAM_LANGUAGE_KOREAN:	  ret = LANG_KOREAN; break;
 			case PSP_SYSTEMPARAM_LANGUAGE_ENGLISH: 	  ret = LANG_ENGLISH; break;
 			case PSP_SYSTEMPARAM_LANGUAGE_FRENCH: 	  ret = LANG_ENGLISH; break;
 			case PSP_SYSTEMPARAM_LANGUAGE_SPANISH: 	  ret = LANG_ENGLISH; break;

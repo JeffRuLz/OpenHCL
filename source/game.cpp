@@ -173,8 +173,9 @@ void gameStart()
 	saveData = createSaveData();
 	state = GAME_STATE_TITLESCREEN;
 
-	loadAssets();
-	loadText(gameLanguage);
+	loadTitleAssets();
+	//loadAssets();
+	//loadText(gameLanguage);
 
 	gameResetGame();
 	titleScreenStart();
@@ -184,8 +185,18 @@ void gameEnd()
 {
 	aud_StopAll();
 
+	enemyList.clear();
+	effectList.clear();
+	objectList.clear();
+	platformList.clear();
+	weaponList.clear();
+
+	gfx_FreeTilemap(tilemap[0]); tilemap[0] = nullptr;
+	gfx_FreeTilemap(tilemap[1]); tilemap[1] = nullptr;	
+
 	freeAssets();
 	freeSaveData(saveData);
+	saveData = nullptr;
 
 	#ifndef _DEBUG
 	sys_DeleteSaveFile(SYS_TEMPSAVEPATH);

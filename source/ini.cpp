@@ -152,7 +152,8 @@ bool iniLoad()
 					sprintf(checkStr, "=%s", getLanguageLabel(lang));
 					if (strstr(str, checkStr) != 0)
 					{
-						loadText(lang);
+						//loadText(lang);
+						gameSetLanguage(lang);
 						break;
 					}
 				}

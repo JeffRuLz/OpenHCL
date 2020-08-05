@@ -81,12 +81,13 @@ int aud_Init()
 
 void aud_Exit()
 {
-	aud_StopMusic();
+	ndspExit();
+	//aud_StopAll();
 
 	linearFree((char*)waveBuf[0].data_vaddr);
 	linearFree((char*)waveBuf[1].data_vaddr);
-
-	ndspExit();
+	waveBuf[0].data_vaddr = nullptr;
+	waveBuf[1].data_vaddr = nullptr;
 }
 
 int aud_GetMusicVolume()
@@ -333,8 +334,11 @@ static void musicCallback(void* data)
 
 		waveBuf[fillBlock].status = NDSP_WBUF_FREE;
 
-		DSP_FlushDataCache(waveBuf[fillBlock].data_vaddr, BUF_SIZE);
-		ndspChnWaveBufAdd(0, &waveBuf[fillBlock]);
+		if (waveBuf[fillBlock].data_vaddr != nullptr)
+		{
+			DSP_FlushDataCache(waveBuf[fillBlock].data_vaddr, BUF_SIZE);
+			ndspChnWaveBufAdd(0, &waveBuf[fillBlock]);
+		}
 
 		fillBlock = !fillBlock;
 	}
@@ -386,15 +390,18 @@ void aud_PlayMusic(Music* m, bool loop)
 void aud_StopAll()
 {
 	aud_StopMusic();
-
-	for (int i = 0; i < NDSP_NUM_CHANNELS; i++)
-		ndspChnWaveBufClear(i);
+	
+	for (int i = 0; i < NDSP_NUM_CHANNELS-1; i++)
+		ndspChnReset(i);
 }
 
 void aud_StopMusic()
 {
-	musicIsPlaying = false;
-	ov_clear(&vf);
+	if (musicIsPlaying)
+	{
+		musicIsPlaying = false;
+		ov_clear(&vf);
+	}
 }
 
 void aud_MuteMusic(bool mute)

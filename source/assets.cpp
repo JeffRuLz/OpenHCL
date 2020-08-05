@@ -6,6 +6,49 @@ Surface* images[NUM_OF_IMAGES] = { nullptr };
 Sound* sounds[NUM_OF_SOUNDS] = { nullptr };
 Music* music[NUM_OF_MUSIC] = { nullptr };
 
+void loadTitleAssets()
+{
+	//graphics
+	{
+		char qdaPath[128];
+		sprintf(qdaPath, "%sbmp.qda", SYS_DATAPATH);
+
+		if (images[imgTitle01] == nullptr)
+		{
+			FILE* f = ExtractFromQDAFile(qdaPath, "title01.BMP");
+
+			if (f)
+				images[imgTitle01] = gfx_LoadSurface(f);
+			fclose(f);
+		}
+
+		if (images[imgFont] == nullptr)
+		{
+			FILE* f = ExtractFromQDAFile(qdaPath, "font8x8-01.bmp");
+
+			if (f)
+				images[imgFont] = gfx_LoadSurface(f);
+			fclose(f);
+		}
+
+		if (images[imgFontKana] == nullptr)
+		{
+			FILE* f = ExtractFromQDAFile(qdaPath, "font8x8-kana.bmp");
+
+			if (f)
+				images[imgFontKana] = gfx_LoadSurface(f);
+			fclose(f);
+		}
+	}
+
+	//sounds
+	if (sounds[sndPi01] == nullptr)
+		sounds[sndPi01] = aud_LoadSound("pi01.wav");
+
+	if (sounds[sndOk] == nullptr)
+		sounds[sndOk] = aud_LoadSound("ok.wav");
+}
+
 void loadAssets()
 {
 	//load graphics
@@ -33,11 +76,12 @@ void loadAssets()
 
 		for (int i = 0; i < NUM_OF_IMAGES; i++)
 		{
-			FILE* f = ExtractFromQDAFile(qdaPath, fname[i]);
-
-			if (f)
+			if (images[i] == nullptr)
 			{
-				images[i] = gfx_LoadSurface(f);
+				FILE* f = ExtractFromQDAFile(qdaPath, fname[i]);
+
+				if (f)
+					images[i] = gfx_LoadSurface(f);
 				fclose(f);
 			}
 		}
@@ -93,7 +137,10 @@ void loadAssets()
 		};
 
 		for (int i = 0; i < NUM_OF_SOUNDS; i++)
-			sounds[i] = aud_LoadSound(fname[i]);
+		{
+			if (sounds[i] == nullptr)
+				sounds[i] = aud_LoadSound(fname[i]);
+		}
 	}
 
 	//load music
@@ -108,7 +155,10 @@ void loadAssets()
 		};
 
 		for (int i = 0; i < NUM_OF_MUSIC; i++)
-			music[i] = aud_LoadMusic(fname[i]);
+		{
+			if (music[i] == nullptr)
+				music[i] = aud_LoadMusic(fname[i]);
+		}
 	}
 }
 

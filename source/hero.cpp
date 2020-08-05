@@ -908,7 +908,7 @@ void Hero::draw(float subFrame, float depth)
 		case HERO_STATE_DEATH:
 		{
 			if (deathTimer >= 130)
-				drawTextBold("GAME OVER", 124 + (-8*depth), 120, 2);
+				drawTextBold(TEXT_GAME_OVER, 124 + (-8*depth), 120, 2);
 
 			//don't draw character
 			if (deathTimer >= 90)

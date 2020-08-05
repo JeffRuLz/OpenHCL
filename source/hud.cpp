@@ -51,7 +51,7 @@ void hudDraw(float subFrame, float depth)
 	//Ammo counter
 	char num[8];
 	sprintf(num, "%02ld", hero.getAmmo());
-	drawTextBold(num, x+37, y + 18, TEXT_COLOR_WHITE);
+	drawBold(num, x+37, y + 18, TEXT_COLOR_WHITE);
 
 	//time
 	if (gameGetTimer())
@@ -66,6 +66,6 @@ void hudDraw(float subFrame, float depth)
 
 		char str[64];
 		sprintf(str, "%02d:%02d:%02d", hours, minutes, seconds);
-		drawTextBold(str, x+104, y+18, TEXT_COLOR_WHITE);
+		drawBold(str, x+104, y+18, TEXT_COLOR_WHITE);
 	}
 }
