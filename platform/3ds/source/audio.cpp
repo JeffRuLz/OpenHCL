@@ -46,7 +46,7 @@ typedef struct
 static char musicVol = 80;
 static char soundVol = 80;
 
-#define NDSP_NUM_CHANNELS 24
+#define NDSP_NUM_CHANNELS 12
 static ndspWaveBuf waveBuf[NDSP_NUM_CHANNELS];
 
 #define BUF_SIZE (4096)
@@ -81,13 +81,10 @@ int aud_Init()
 
 void aud_Exit()
 {
-	ndspExit();
-	//aud_StopAll();
-
 	linearFree((char*)waveBuf[0].data_vaddr);
 	linearFree((char*)waveBuf[1].data_vaddr);
-	waveBuf[0].data_vaddr = nullptr;
-	waveBuf[1].data_vaddr = nullptr;
+
+	ndspExit();
 }
 
 int aud_GetMusicVolume()
@@ -334,11 +331,8 @@ static void musicCallback(void* data)
 
 		waveBuf[fillBlock].status = NDSP_WBUF_FREE;
 
-		if (waveBuf[fillBlock].data_vaddr != nullptr)
-		{
-			DSP_FlushDataCache(waveBuf[fillBlock].data_vaddr, BUF_SIZE);
-			ndspChnWaveBufAdd(0, &waveBuf[fillBlock]);
-		}
+		DSP_FlushDataCache(waveBuf[fillBlock].data_vaddr, BUF_SIZE);
+		ndspChnWaveBufAdd(0, &waveBuf[fillBlock]);
 
 		fillBlock = !fillBlock;
 	}
@@ -391,12 +385,16 @@ void aud_StopAll()
 {
 	aud_StopMusic();
 	
-	for (int i = 0; i < NDSP_NUM_CHANNELS-1; i++)
-		ndspChnReset(i);
+	for (int i = 1; i < NDSP_NUM_CHANNELS; i++)
+	{
+		ndspChnWaveBufClear(i);
+	}
 }
 
 void aud_StopMusic()
 {
+	ndspChnWaveBufClear(0);
+
 	if (musicIsPlaying)
 	{
 		musicIsPlaying = false;

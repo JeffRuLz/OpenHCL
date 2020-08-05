@@ -15,10 +15,12 @@ static float scroll_y = 0;
 int gfx_Init()
 {
 	gfxInitDefault();
-	gfxSet3D(true);
+	gfxSetWide(false);
 	C3D_Init(C3D_DEFAULT_CMDBUF_SIZE);
 	C2D_Init(C2D_DEFAULT_MAX_OBJECTS);
 	C2D_Prepare();
+
+	gfxSet3D(true);
 
 	// Create screens
 	fb[0] = C2D_CreateScreenTarget(GFX_TOP, GFX_LEFT);
