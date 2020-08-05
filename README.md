@@ -43,3 +43,5 @@ Sound effects: [Osabishyuuki](http://osabisi.sakura.ne.jp/m2/)
 Project Quadruple D: [Sandman](http://karen.saiin.net/~hayase/)
 
 English translation: [Gary the Krampus](https://hkcomplex.tumblr.com/)
+
+Korean translation: [DDinghoya](https://github.com/DDinghoya)

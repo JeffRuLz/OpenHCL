@@ -46,7 +46,7 @@ typedef struct
 static char musicVol = 80;
 static char soundVol = 80;
 
-#define NDSP_NUM_CHANNELS 12
+#define NDSP_NUM_CHANNELS 24
 static ndspWaveBuf waveBuf[NDSP_NUM_CHANNELS];
 
 #define BUF_SIZE (4096)
