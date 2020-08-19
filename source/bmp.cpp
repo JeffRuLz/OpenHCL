@@ -34,18 +34,23 @@ Bitmap* loadBitmap(FILE* f)
 
 	if (!f)
 	{
+		#ifdef _DEBUG
 		printf("Bitmap file pointer is null\n");
+		#endif
 	}
 	else
 	{
 		//read file header
 		BitmapFileHeader bfh;
 		fread(&bfh, sizeof(BitmapFileHeader), 1, f);
+		//bfh.bfOffBits = sys_ByteSwap32(bfh.bfOffBits);
 
 		//check if signature is correct
 		if (bfh.bfType[0] != 'B' || bfh.bfType[1] != 'M')
 		{
+			#ifdef _DEBUG
 			printf("File signature is incorrect.\n");
+			#endif
 		}
 		else
 		{
@@ -56,6 +61,7 @@ Bitmap* loadBitmap(FILE* f)
 			bih.biWidth = sys_ByteSwap32(bih.biWidth);
 			bih.biHeight = sys_ByteSwap32(bih.biHeight);
 			bih.biBitCount = sys_ByteSwap16(bih.biBitCount);
+			bih.biClrUsed = sys_ByteSwap16(bih.biClrUsed);
 
 			//
 			bmp = (Bitmap*)malloc(sizeof(Bitmap));
@@ -71,6 +77,10 @@ Bitmap* loadBitmap(FILE* f)
 				//read palette
 				int size = 256*4*sizeof(unsigned char);
 				bmp->palette = (unsigned char*)malloc(size);
+
+				if (bih.biClrUsed != 0 && bih.biClrUsed < 16)
+					size = 4 * bih.biClrUsed;
+				
 				fread(bmp->palette, size, 1, f);
 
 				//allocate data
@@ -95,7 +105,9 @@ Bitmap* loadBitmap(FILE* f)
 			}
 			else
 			{
+				#ifdef _DEBUG
 				printf("Bit count is not supported: %d\n", bih.biBitCount);
+				#endif
 
 				freeBitmap(bmp);
 				bmp = nullptr;
