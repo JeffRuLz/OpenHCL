@@ -61,7 +61,7 @@ Bitmap* loadBitmap(FILE* f)
 			bih.biWidth = sys_ByteSwap32(bih.biWidth);
 			bih.biHeight = sys_ByteSwap32(bih.biHeight);
 			bih.biBitCount = sys_ByteSwap16(bih.biBitCount);
-			bih.biClrUsed = sys_ByteSwap16(bih.biClrUsed);
+			bih.biClrUsed = sys_ByteSwap32(bih.biClrUsed);
 
 			//
 			bmp = (Bitmap*)malloc(sizeof(Bitmap));
