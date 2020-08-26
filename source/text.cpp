@@ -5,14 +5,14 @@
 #include <stdio.h>
 #include <string.h>
 
+#define MAX_CHARACTERS 48
+#define TABLE_SIZE (20*24)
+
 typedef struct
 {
 	unsigned short character[MAX_CHARACTERS];
 	unsigned char length;
 } Message;
-
-#define MAX_CHARACTERS 48
-#define TABLE_SIZE (20*24)
 
 static Message text[TEXT_LAST];
 static bool forcePlain = true;
