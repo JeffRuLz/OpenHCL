@@ -39,6 +39,15 @@ void loadTitleAssets()
 				images[imgFontKana] = gfx_LoadSurface(f);
 			fclose(f);
 		}
+
+		if (images[imgFontHangul] == nullptr)
+		{
+			FILE* f = ExtractFromQDAFile(qdaPath, "font10x10-hangul.bmp");
+
+			if (f)
+				images[imgFontHangul] = gfx_LoadSurface(f);
+			fclose(f);
+		}
 	}
 
 	//sounds
@@ -63,6 +72,7 @@ void loadAssets()
 			"ene01.bmp",
 			"font8x8-01.bmp",
 			"font8x8-kana.bmp",
+			"font10x10-hangul.bmp",
 			"items.bmp",
 			"mychr.bmp",
 			"status.bmp",

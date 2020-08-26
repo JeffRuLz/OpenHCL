@@ -12,7 +12,7 @@ void loadTileset(int level);
 void loadBossGraphics(int level);
 void loadMusic(int level);
 
-#define NUM_OF_IMAGES 15
+#define NUM_OF_IMAGES 16
 #define NUM_OF_SOUNDS 44
 #define NUM_OF_MUSIC 6
 
@@ -30,6 +30,7 @@ enum {
 	imgEne01,
 	imgFont,
 	imgFontKana,
+	imgFontHangul,
 	imgItems,
 	imgMychr,		//hero character
 	imgStatus,		//hud

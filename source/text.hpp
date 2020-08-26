@@ -11,6 +11,7 @@ int drawText(int line, float x, float y, bool center = false);
 int drawChar(char c, float x, float y);
 int messageLength(int line);
 
+bool textIsPlain();
 char* getLanguageLabel(int lang);
 
 int drawTextBold(int line, float x, float y, char col = TEXT_COLOR_WHITE, bool centered = false);

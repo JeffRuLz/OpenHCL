@@ -26,7 +26,10 @@ void titleScreenStart()
 	cursorSize = max(cursorSize, messageLength(TEXT_LOAD_GAME));
 	cursorSize = max(cursorSize, messageLength(TEXT_EXIT));
 
-	cursorSize = ceil(cursorSize * 8 / 16) + 2;
+	if (textIsPlain())
+		cursorSize = ceil(cursorSize * 10 / 16) + 2;
+	else
+		cursorSize = ceil(cursorSize * 8 / 16) + 2;
 
 	cursorX = 160 - cursorSize * 16 / 2;
 	//printf("%d %d\n", cursorSize, cursorX);
@@ -138,4 +141,6 @@ void titleScreenDraw(float subFrame, float depth)
 
 	drawBold("(C) 2011 E.HASHIMOTO", 160, 200, TEXT_COLOR_WHITE, true);
 	drawBold("2020 OPEN HCL", 160, 210, TEXT_COLOR_WHITE, true);
+
+	//gfx_DrawSurface(images[imgFontHangul], 0, 0);
 }
