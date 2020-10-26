@@ -4,6 +4,7 @@
 #include <malloc.h>
 #include <string.h>
 #include "../../../source/bmp.hpp"
+#include <ogc/machine/processor.h>
 
 typedef struct
 {
@@ -29,6 +30,9 @@ static bool progressive = false;
 static bool pal = false;
 static int videomode = 1;
 
+static bool isWiiVC = false;
+static bool isWiiU = false;
+
 static float scroll_y = 0;
 
 static GXTexture* currentTexture = nullptr;
@@ -39,12 +43,26 @@ static void _setupVideo()
 	u32 xfbHeight;
 	GXColor background = {0, 0, 0, 0xff};
 
-	widescreen = (CONF_GetAspectRatio() == CONF_ASPECT_16_9);
+	isWiiVC = read32(0x12FFFFC0);
+	isWiiU = ((*(vu16*)0xCD8005A0 == 0xCAFE) || isWiiVC);
+
+	widescreen = (!isWiiU && CONF_GetAspectRatio() == CONF_ASPECT_16_9);
 	progressive = CONF_GetProgressiveScan();
 	pal = (CONF_GetVideo() != CONF_VIDEO_NTSC);
 
 	if (widescreen)
-		rmode->viWidth = 720;
+	{
+		rmode->viWidth = 704;
+	} else
+	{
+		rmode->viWidth = 686;
+	}
+
+	if (isWiiU)
+	{
+		write32(0xd8006a0, 0x30000002);
+		mask32(0xd8006a8, 0, 2);
+	}
 /*
 	// allocate 2 framebuffers for double buffering
 	if (frameBuffer[0] != nullptr)
@@ -163,7 +181,11 @@ int gfx_Start()
 
 void gfx_End()
 {
-
+	if (isWiiU && CONF_GetAspectRatio() == CONF_ASPECT_16_9)
+	{
+		write32(0xd8006a0, 0x30000004);
+		mask32(0xd8006a8, 0, 2);
+	}
 }
 
 int gfx_GetVideoMode(char* str)
