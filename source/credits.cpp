@@ -97,9 +97,11 @@ static char credits[][40] =
 #ifdef _WII
 	"WII VERSION",
 	"JEFFRULZ",
+	"Vague Rant",
 	"LIB OGC",
 	"LIB OGG",
 	"LIB VORBIS",
+	"LIB WiiDRC",
 #endif
 
 #ifdef _WIN32
