@@ -12,6 +12,7 @@ A fanmade, cross-platform port of [E. (Buster) Hashimoto's](https://hp.vector.co
 #### Wii
 - 240p mode for CRT televisions.
 - Controllable with wiimote, nunchuk, gamecube, and classic controllers.
+- Also playable on the WiiU.
 
 ## Compiling
 Note: to run the game after compiling you may need the assets from the release page.
@@ -31,6 +32,7 @@ Note: to run the game after compiling you may need the assets from the release p
 #### Wii
 - Install [DevkitPro](https://devkitpro.org/wiki/Getting_Started) with devkitPPC and libogc.
 - Install vorbisidec: `pacman -S ppc-libvorbisidec`
+- Install [libwiidrc](https://github.com/FIX94/libwiidrc/releases).
 - Run `make wii`
 
 ## Acknowledgments
