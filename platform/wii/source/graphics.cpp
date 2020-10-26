@@ -55,7 +55,7 @@ static void _setupVideo()
 		rmode->viWidth = 704;
 	} else
 	{
-		rmode->viWidth = 686;
+		rmode->viWidth = (isWiiU)? 686: 640;
 	}
 
 	if (isWiiU)
