@@ -3,6 +3,8 @@
 #include "system.hpp"
 #include <gccore.h>
 #include <wiiuse/wpad.h>
+#include <string.h>
+#include <wiidrc/wiidrc.h>
 #include <math.h>
 
 static unsigned int kBuffer = 0;
@@ -13,6 +15,7 @@ int inp_Init()
 {
 	PAD_Init();
 	WPAD_Init();
+	WiiDRC_Init();
 
 	WPAD_SetPowerButtonCallback(powerCallback);
 	
@@ -169,6 +172,29 @@ static void _scanNunchuk(u32 down)
 	if (down & WPAD_BUTTON_RIGHT) kBuffer |= BTN_R;
 }
 
+static void _scanWiiDRC(u32 down)
+{
+	s8 stickDeadZone = 32;
+
+	if(WiiDRC_lStickY() >  stickDeadZone || (down & WIIDRC_BUTTON_UP))		kBuffer |= BTN_UP;
+	if(WiiDRC_lStickY() < -stickDeadZone || (down & WIIDRC_BUTTON_DOWN))	kBuffer |= BTN_DOWN;
+	if(WiiDRC_lStickX() < -stickDeadZone || (down & WIIDRC_BUTTON_LEFT))	kBuffer |= BTN_LEFT;
+	if(WiiDRC_lStickX() >  stickDeadZone || (down & WIIDRC_BUTTON_RIGHT))	kBuffer |= BTN_RIGHT;
+
+	if(down & WIIDRC_BUTTON_B)		kBuffer |= BTN_JUMP;
+	if(down & WIIDRC_BUTTON_Y)		kBuffer |= BTN_ATTACK;
+	if(down & WIIDRC_BUTTON_A)		kBuffer |= BTN_WEAPON;
+	if(down & WIIDRC_BUTTON_PLUS)	kBuffer |= BTN_START;
+	if(down & WIIDRC_BUTTON_X)		kBuffer |= BTN_START;
+	if(down & WIIDRC_BUTTON_HOME)	kBuffer |= BTN_SELECT;
+	if(down & WIIDRC_BUTTON_A)		kBuffer |= BTN_ACCEPT;
+	if(down & WIIDRC_BUTTON_B)		kBuffer |= BTN_DECLINE;
+	if(down & WIIDRC_BUTTON_MINUS)	kBuffer |= BTN_R;
+
+	if((down & WIIDRC_BUTTON_L) || (down & WIIDRC_BUTTON_ZL))	kBuffer |= BTN_L;
+	if((down & WIIDRC_BUTTON_R) || (down & WIIDRC_BUTTON_ZR))	kBuffer |= BTN_R;
+}
+
 void inp_Scan()
 {
 	PAD_ScanPads();
@@ -190,6 +216,13 @@ void inp_Scan()
 		case EXP_CLASSIC: _scanClassic(wDown); break;
 		case EXP_NUNCHUK: _scanNunchuk(wDown); break;
 		default: _scanWiimote(wDown); break;
+	}
+
+	if(WiiDRC_Inited() && WiiDRC_Connected())
+	{
+		WiiDRC_ScanPads();
+		u32 uDown = WiiDRC_ButtonsHeld();
+		_scanWiiDRC(uDown);
 	}
 
 	//disable opposites
