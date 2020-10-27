@@ -3,7 +3,6 @@
 #include "system.hpp"
 #include <gccore.h>
 #include <wiiuse/wpad.h>
-#include <string.h>
 #include <wiidrc/wiidrc.h>
 #include <math.h>
 
