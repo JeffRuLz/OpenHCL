@@ -55,8 +55,10 @@ static void _setupVideo()
 		rmode->viWidth = 704;
 	} else
 	{
-		rmode->viWidth = (isWiiU)? 686: 640;
+		rmode->viWidth = 686;
 	}
+
+	rmode->viXOrigin = (VI_MAX_WIDTH_NTSC - rmode->viWidth)/2;
 
 	if (isWiiU)
 	{
