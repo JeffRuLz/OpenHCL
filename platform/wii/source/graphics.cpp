@@ -138,9 +138,9 @@ static void _setupVideo()
 	GX_InvalidateTexAll();
 
 	if (widescreen)
-		guOrtho(perspective,0,479,0,854-1,0,300);
+		guOrtho(perspective,0,480,0,854,0,300);
 	else
-		guOrtho(perspective,0,479,0,639,0,300);
+		guOrtho(perspective,0,480,0,640,0,300);
 	
 	GX_LoadProjectionMtx(perspective, GX_ORTHOGRAPHIC);
 }
