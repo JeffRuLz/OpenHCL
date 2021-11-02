@@ -32,7 +32,7 @@ Note: to run the game after compiling you may need the assets from the release p
 
 #### Vita
 - Install [VitaSDK](https://vitasdk.org/).
-- Run 'make vita'
+- Run `make vita`
 
 #### Wii
 - Install [DevkitPro](https://devkitpro.org/wiki/Getting_Started) with devkitPPC and libogc.
