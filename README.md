@@ -9,6 +9,7 @@ A fanmade, cross-platform port of [E. (Buster) Hashimoto's](https://hp.vector.co
 #### PSP
 
 #### Vita
+- Displays in 640x480.
 
 #### Wii
 - 240p mode for CRT televisions.
