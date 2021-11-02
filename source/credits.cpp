@@ -94,6 +94,14 @@ static char credits[][40] =
 	"LIB VORBIS",
 #endif
 
+#ifdef _VITA
+	"VITA VERSION",
+	"JEFFRULZ",
+	"VITASDK",
+	"SDL2",
+	"SDL MIXER",
+#endif
+
 #ifdef _WII
 	"WII VERSION",
 	"JEFFRULZ",

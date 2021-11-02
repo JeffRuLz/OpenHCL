@@ -181,7 +181,7 @@ void Devil::update()
 	}
 	else if (vsp < 0)
 	{
-		if ((vsp += 0.05) <= 0)
+		if ((vsp += 0.05) >= 0)
 			vsp = 0;
 	}
 
