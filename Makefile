@@ -1,8 +1,8 @@
 #.PHONY:
 
-all: cia psp wii win32
+all: cia psp vita wii win32
 
-clean: clean-3ds clean-psp clean-wii clean-win32
+clean: clean-3ds clean-psp clean-vita clean-wii clean-win32
 
 #---------------------------------
 3ds:
@@ -20,6 +20,13 @@ psp:
 	
 clean-psp:
 	@$(MAKE) -C platform/psp clean
+
+#---------------------------------
+vita:
+	@$(MAKE) -C platform/vita
+	
+clean-vita:
+	@$(MAKE) -C platform/vita clean
 	
 #---------------------------------
 wii:
