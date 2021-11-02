@@ -7,7 +7,8 @@ A fanmade, cross-platform port of [E. (Buster) Hashimoto's](https://hp.vector.co
 - Inventory displayed on the bottom screen.
 
 #### PSP
-- Also playable on Vita.
+
+#### Vita
 
 #### Wii
 - 240p mode for CRT televisions.
@@ -28,6 +29,10 @@ Note: to run the game after compiling you may need the assets from the release p
 - Install [PSPSDK](https://github.com/pspdev/pspsdk). ([Minimalist PSPSDK](https://sourceforge.net/projects/minpspw/))
 - Install the [libvorbis and libogg devpaks](https://sourceforge.net/projects/minpspw/files/devpak%20%28posix%29/devpaks%20%28cygwin_nix%29/). (In Minimalist PSPSDK, keep the 'Basic Devpaks' box checked during setup.)
 - Run `make psp`
+
+#### Vita
+- Install [VitaSDK](https://vitasdk.org/).
+- Run 'make vita'
 
 #### Wii
 - Install [DevkitPro](https://devkitpro.org/wiki/Getting_Started) with devkitPPC and libogc.
