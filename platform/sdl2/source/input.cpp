@@ -2,10 +2,17 @@
 #include "system.hpp"
 #include <SDL2/SDL.h>
 #include <stdio.h>
+#ifdef _VITA
+#include <psp2/apputil.h>
+#include <psp2/system_param.h>
+#endif
 
 static unsigned int kBuffer = 0;
 static unsigned int kDown = 0;
 static unsigned int kDownPrev = 0;
+
+static SDL_GameControllerButton acceptButton = SDL_CONTROLLER_BUTTON_A;
+static SDL_GameControllerButton declineButton = SDL_CONTROLLER_BUTTON_B;
 
 static SDL_GameController* pad = nullptr;
 static Sint16 deadzone = 32767 / 3;
@@ -26,6 +33,20 @@ int inp_Init()
 	{
 		printf("No joystick found\n");
 	}
+	
+#ifdef _VITA
+	int enterButton = 0;
+	sceAppUtilSystemParamGetInt(SCE_SYSTEM_PARAM_ID_ENTER_BUTTON, &enterButton);
+	
+	if (enterButton == SCE_SYSTEM_PARAM_ENTER_BUTTON_CROSS) {
+		acceptButton = SDL_CONTROLLER_BUTTON_A;
+		declineButton = SDL_CONTROLLER_BUTTON_B;
+	}
+	else {
+		acceptButton = SDL_CONTROLLER_BUTTON_B;
+		declineButton = SDL_CONTROLLER_BUTTON_A;
+	}
+#endif
 
 	return 0;
 }
@@ -71,26 +92,20 @@ void inp_Scan()
 		Sint16 xaxis = SDL_GameControllerGetAxis(pad, SDL_CONTROLLER_AXIS_LEFTX);
 		Sint16 yaxis = SDL_GameControllerGetAxis(pad, SDL_CONTROLLER_AXIS_LEFTY);
 
-		if (yaxis < -deadzone || SDL_GameControllerGetButton(pad, SDL_CONTROLLER_BUTTON_DPAD_UP))
-			kBuffer |= BTN_UP;
-		if (yaxis > deadzone || SDL_GameControllerGetButton(pad, SDL_CONTROLLER_BUTTON_DPAD_DOWN))
-			kBuffer |= BTN_DOWN;
-		if (xaxis < -deadzone || SDL_GameControllerGetButton(pad, SDL_CONTROLLER_BUTTON_DPAD_LEFT))
-			kBuffer |= BTN_LEFT;
-		if (xaxis > deadzone || SDL_GameControllerGetButton(pad, SDL_CONTROLLER_BUTTON_DPAD_RIGHT))
-			kBuffer |= BTN_RIGHT;
+		if (yaxis < -deadzone || SDL_GameControllerGetButton(pad, SDL_CONTROLLER_BUTTON_DPAD_UP)) 	kBuffer |= BTN_UP;
+		if (yaxis > deadzone || SDL_GameControllerGetButton(pad, SDL_CONTROLLER_BUTTON_DPAD_DOWN))	kBuffer |= BTN_DOWN;
+		if (xaxis < -deadzone || SDL_GameControllerGetButton(pad, SDL_CONTROLLER_BUTTON_DPAD_LEFT)) kBuffer |= BTN_LEFT;
+		if (xaxis > deadzone || SDL_GameControllerGetButton(pad, SDL_CONTROLLER_BUTTON_DPAD_RIGHT))	kBuffer |= BTN_RIGHT;
+		
+		if (SDL_GameControllerGetButton(pad, acceptButton))		kBuffer |= BTN_ACCEPT;
+		if (SDL_GameControllerGetButton(pad, declineButton))	kBuffer |= BTN_DECLINE;
 
-		if (SDL_GameControllerGetButton(pad, SDL_CONTROLLER_BUTTON_A))
-			kBuffer |= BTN_JUMP | BTN_ACCEPT;
-		if (SDL_GameControllerGetButton(pad, SDL_CONTROLLER_BUTTON_B))
-			kBuffer |= BTN_WEAPON | BTN_DECLINE;
-		if (SDL_GameControllerGetButton(pad, SDL_CONTROLLER_BUTTON_X))
-			kBuffer |= BTN_ATTACK;
+		if (SDL_GameControllerGetButton(pad, SDL_CONTROLLER_BUTTON_A))	kBuffer |= BTN_JUMP;
+		if (SDL_GameControllerGetButton(pad, SDL_CONTROLLER_BUTTON_B))	kBuffer |= BTN_WEAPON;
+		if (SDL_GameControllerGetButton(pad, SDL_CONTROLLER_BUTTON_X))	kBuffer |= BTN_ATTACK;
 
-		if (SDL_GameControllerGetButton(pad, SDL_CONTROLLER_BUTTON_START))
-			kBuffer |= BTN_START;
-		if (SDL_GameControllerGetButton(pad, SDL_CONTROLLER_BUTTON_BACK))
-			kBuffer |= BTN_SELECT;
+		if (SDL_GameControllerGetButton(pad, SDL_CONTROLLER_BUTTON_START)) 	kBuffer |= BTN_START;
+		if (SDL_GameControllerGetButton(pad, SDL_CONTROLLER_BUTTON_BACK))	kBuffer |= BTN_SELECT;
 
 		if (SDL_GameControllerGetButton(pad, SDL_CONTROLLER_BUTTON_LEFTSHOULDER) ||
 			SDL_GameControllerGetAxis(pad, SDL_CONTROLLER_AXIS_TRIGGERLEFT) > 0)

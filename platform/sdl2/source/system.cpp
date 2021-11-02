@@ -4,11 +4,22 @@
 #include <stdio.h>
 #include "../../../source/game.hpp"
 #include "../../../source/savedata.hpp"
+#ifdef _VITA
+#include <psp2/apputil.h>
+#include <psp2/system_param.h>
+#endif
 
+#ifdef _VITA
+char const* SYS_DATAPATH 	 = "ux0:data/OpenHCL/";
+char const* SYS_INIPATH  	 = "ux0:data/OpenHCL/system.ini";
+char const* SYS_SAVEPATH 	 = "ux0:data/OpenHCL/map/018.map";
+char const* SYS_TEMPSAVEPATH = "ux0:data/OpenHCL/data/save.tmp";
+#else
 char const* SYS_DATAPATH 	 = "./";
 char const* SYS_INIPATH  	 = "./system.ini";
 char const* SYS_SAVEPATH 	 = "./map/018.map";
 char const* SYS_TEMPSAVEPATH = "./data/save.tmp";
+#endif
 
 static SDL_Event e;
 static bool gameIsRunning = true;
@@ -18,6 +29,14 @@ static bool altDown = false;
 
 int sys_Init()
 {
+#ifdef _VITA
+	SceAppUtilInitParam init;
+	SceAppUtilBootParam boot;
+	memset(&init, 0, sizeof(SceAppUtilInitParam));
+	memset(&boot, 0, sizeof(SceAppUtilBootParam));
+	sceAppUtilInit(&init, &boot);
+#endif
+	
 	int ret = SDL_Init(0);
 
 	if (ret < 0)
@@ -68,14 +87,14 @@ int sys_MainLoop()
 						sys_QuitGame();
 				}
 				break;
-
+#ifdef _HAS_FULLSCREEN
 				case SDLK_RETURN:
 				{
 					if (altDown)
 						gfx_SetFullscreen(!gfx_GetFullscreen());
 				}
 				break;
-
+#endif
 				case SDLK_r:
 				{
 					if (ctrlDown)
@@ -111,7 +130,31 @@ void sys_QuitGame()
 
 int sys_GetLanguage()
 {
+#ifdef _VITA
+	int ret = LANG_JAPANESE;
+	int l = 0;
+	
+	if (sceAppUtilSystemParamGetInt(SCE_SYSTEM_PARAM_ID_LANG, &l) == 0)
+	{
+		switch (l)
+		{
+			case SCE_SYSTEM_PARAM_LANG_JAPANESE:   	  ret = LANG_JAPANESE; break;
+			case SCE_SYSTEM_PARAM_LANG_KOREAN:	  	  ret = LANG_KOREAN; break;
+			case SCE_SYSTEM_PARAM_LANG_ENGLISH_US: 	  ret = LANG_ENGLISH; break;
+			case SCE_SYSTEM_PARAM_LANG_ENGLISH_GB: 	  ret = LANG_ENGLISH; break;
+			case SCE_SYSTEM_PARAM_LANG_FRENCH: 	  	  ret = LANG_ENGLISH; break;
+			case SCE_SYSTEM_PARAM_LANG_SPANISH: 	  ret = LANG_ENGLISH; break;
+			case SCE_SYSTEM_PARAM_LANG_GERMAN: 	  	  ret = LANG_ENGLISH; break;
+			case SCE_SYSTEM_PARAM_LANG_ITALIAN: 	  ret = LANG_ENGLISH; break;
+			case SCE_SYSTEM_PARAM_LANG_DUTCH: 	  	  ret = LANG_ENGLISH; break;
+			default: ret = LANG_JAPANESE;
+		}
+	}
+
+	return ret;
+#else
 	return LANG_JAPANESE;
+#endif
 }
 
 unsigned short sys_ByteSwap16(unsigned short val)

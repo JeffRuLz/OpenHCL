@@ -2,18 +2,21 @@
 #include <SDL2/SDL.h>
 #include <malloc.h>
 #include "../../../source/bmp.hpp"
+#include "../../../source/math.hpp"
 
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 240
 
-static int scale = 3;
+static int scale = 2;
 static bool vsync = true;
+static bool fullscreen = false;
 
 static SDL_Window* window = nullptr;
 static SDL_Renderer* renderer = nullptr;
 static SDL_Texture* screenBuffer = nullptr;
 
 static float scroll_y = 0;
+static SDL_Rect screenPos = { 0, 0, 640, 480 };
 
 int gfx_Init()
 {
@@ -35,10 +38,19 @@ void gfx_Exit()
 
 int gfx_Start()
 {
-	int w = SCREEN_WIDTH * scale;
-	int h = SCREEN_HEIGHT * scale;
+	SDL_DisplayMode DM;
+	SDL_GetCurrentDisplayMode(0, &DM);
+	int displayWidth = DM.w;
+	int displayHeight = DM.h;
 
-	window = SDL_CreateWindow("", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, w, h, SDL_WINDOW_SHOWN);
+	scale = max(1, min(floor(displayWidth/SCREEN_WIDTH), floor(displayHeight/SCREEN_HEIGHT)));
+	
+	screenPos.w = SCREEN_WIDTH * scale;
+	screenPos.h = SCREEN_HEIGHT * scale;
+	screenPos.x = (displayWidth - screenPos.w) / 2;
+	screenPos.y = (displayHeight - screenPos.h) / 2;
+
+	window = SDL_CreateWindow("", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, displayWidth, displayHeight, SDL_WINDOW_SHOWN);
 	if (window == nullptr)
 	{
 		printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
@@ -55,12 +67,14 @@ int gfx_Start()
 		return -2;
 	}
 
-	screenBuffer = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA5551, SDL_TEXTUREACCESS_TARGET, w, h);
+	screenBuffer = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA5551, SDL_TEXTUREACCESS_TARGET, screenPos.w, screenPos.h);
 	if (screenBuffer == nullptr)
 	{
 		printf("Screen Buffer could not be created! SDL Error: %s\n", SDL_GetError());
 		return -3;
 	}
+	
+	gfx_SetFullscreen(fullscreen);
 
 	return 0;
 }
@@ -85,9 +99,9 @@ void gfx_FrameStart()
 }
 
 void gfx_FrameEnd()
-{
+{	
 	SDL_SetRenderTarget(renderer, nullptr);
-	SDL_RenderCopy(renderer, screenBuffer, nullptr, nullptr);
+	SDL_RenderCopy(renderer, screenBuffer, nullptr, &screenPos);
 	SDL_RenderPresent(renderer);
 }
 
@@ -103,12 +117,38 @@ void gfx_SetScrollY(float n)
 
 bool gfx_GetFullscreen()
 {
+#ifdef _VITA
+	return fullscreen;
+#else
 	return (SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN_DESKTOP);
+#endif
 }
 
 void gfx_SetFullscreen(bool full)
 {
+#ifdef _VITA
+	fullscreen = full;
+	
+	SDL_DisplayMode DM;
+	SDL_GetCurrentDisplayMode(0, &DM);
+	
+	if (!fullscreen) {
+		//1:1
+		screenPos.w = 640; 
+		screenPos.h = 480;
+		screenPos.x = (DM.w - screenPos.w) / 2;
+		screenPos.y = (DM.h - screenPos.h) / 2;
+	}
+	else {
+		//fit
+		screenPos.w = DM.h * ((float)SCREEN_WIDTH / (float)SCREEN_HEIGHT);
+		screenPos.h = DM.h;
+		screenPos.x = (DM.w - screenPos.w) / 2;
+		screenPos.y = 0;
+	}
+#else
 	SDL_SetWindowFullscreen(window, ((full)? SDL_WINDOW_FULLSCREEN_DESKTOP: 0));
+#endif
 }
 
 bool gfx_GetVsync()
@@ -126,12 +166,10 @@ Surface* gfx_LoadSurface(const char* fname)
 	Surface* s = nullptr;
 	FILE* f = fopen(fname, "rb");
 
-	if (!f)
-	{
+	if (!f) {
 		printf("Could not open %s\n", fname);
 	}
-	else
-	{
+	else {
 		s = gfx_LoadSurface(f);
 		fclose(f);
 	}
@@ -150,24 +188,20 @@ Surface* gfx_LoadSurface(FILE* f)
 
 	bmp = loadBitmap(f);
 
-	if (bmp == nullptr)
-	{
+	if (bmp == nullptr) {
 		#ifdef _DEBUG
 		printf("Error loading bitmap\n");
 		#endif
 	}
-	else
-	{
+	else {
 		temp = SDL_CreateRGBSurfaceWithFormat(0, bmp->width, bmp->height, 32, SDL_PIXELFORMAT_RGBA32);
 
-		if (temp == nullptr)
-		{
+		if (temp == nullptr) {
 			#ifdef _DEBUG
 			printf("Error creating surface: %s\n", SDL_GetError());
 			#endif
 		}
-		else
-		{
+		else {
 			//load pixels
 			unsigned char* pix = (unsigned char*)temp->pixels;
 
@@ -226,10 +260,8 @@ Surface* gfx_LoadSurface(FILE* f)
 
 void gfx_FreeSurface(Surface* s)
 {
-	if (s)
-	{
-		if (s->data)
-		{
+	if (s) {
+		if (s->data) {
 			SDL_DestroyTexture((SDL_Texture*)s->data);
 			s->data = nullptr;
 		}
@@ -338,8 +370,7 @@ Tilemap* gfx_LoadTilemap(Surface* s, int width, int height, unsigned char* data)
 			{
 				tile = data[x+y*width];
 
-				if (tile != 0)
-				{
+				if (tile != 0) {
 					crop.x = (tile * 20) % s->width;
 					crop.y = ((tile * 20) / s->width) * 20;				
 
@@ -358,14 +389,12 @@ Tilemap* gfx_LoadTilemap(Surface* s, int width, int height, unsigned char* data)
 
 void gfx_FreeTilemap(Tilemap* tm)
 {
-	if (tm)
-	{
+	if (tm) {
 		tm->width = 0;
 		tm->height = 0;
 		tm->image = nullptr;
 
-		if (tm->data)
-		{
+		if (tm->data) {
 			SDL_Texture* tex = (SDL_Texture*)tm->data;
 			SDL_DestroyTexture(tex);
 			tm->data = nullptr;
@@ -379,12 +408,12 @@ void gfx_DrawTilemap(Tilemap* tm, float x, float y)
 {
 	y -= scroll_y;
 
-	SDL_Rect dest;
-
-	dest.x = x * (float)scale;
-	dest.y = y * (float)scale;
-	dest.w = tm->width * 20 * scale;
-	dest.h = tm->height * 20 * scale;
+	SDL_Rect dest = {
+		(int)(x * (float)scale),
+		(int)(y * (float)scale),
+		tm->width * 20 * scale,
+		tm->height * 20 * scale
+	};
 
 	SDL_RenderCopy(renderer, (SDL_Texture*)tm->data, nullptr, &dest);
 }
