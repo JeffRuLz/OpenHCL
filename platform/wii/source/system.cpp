@@ -36,6 +36,16 @@ void powerCallback(int id)
 	powerCallback();
 }
 
+static bool fileExists(const char* fname)
+{
+	FILE* f = fopen(fname, "rb");
+	if (f) {
+		fclose(f);
+		return true;
+	}
+	return false;
+}
+
 int sys_Init()
 {
 	CONF_Init();
@@ -43,6 +53,42 @@ int sys_Init()
 
 	SYS_SetResetCallback(resetCallback);
 	SYS_SetPowerCallback(powerCallback);
+	
+	//Attempt to find data files in multiple possible locations
+	if (fileExists("./bmp.qda")) {
+		SYS_DATAPATH 	 = "./";
+		SYS_INIPATH  	 = "./system.ini";
+		SYS_SAVEPATH 	 = "./map/018.map";
+		SYS_TEMPSAVEPATH = "./data/save.tmp";
+	}
+	else if (fileExists("sd:/apps/OpenHCL/bmp.qda")) {
+		SYS_DATAPATH 	 = "sd:/apps/OpenHCL/";
+		SYS_INIPATH  	 = "sd:/apps/OpenHCL/system.ini";
+		SYS_SAVEPATH 	 = "sd:/apps/OpenHCL/map/018.map";
+		SYS_TEMPSAVEPATH = "sd:/apps/OpenHCL/data/save.tmp";		
+	}
+	else if (fileExists("sd:/OpenHCL/bmp.qda")) {
+		SYS_DATAPATH 	 = "sd:/OpenHCL/";
+		SYS_INIPATH  	 = "sd:/OpenHCL/system.ini";
+		SYS_SAVEPATH 	 = "sd:/OpenHCL/map/018.map";
+		SYS_TEMPSAVEPATH = "sd:/OpenHCL/data/save.tmp";
+	}
+	else if (fileExists("usb:/apps/OpenHCL/bmp.qda")) {
+		SYS_DATAPATH 	 = "usb:/apps/OpenHCL/";
+		SYS_INIPATH  	 = "usb:/apps/OpenHCL/system.ini";
+		SYS_SAVEPATH 	 = "usb:/apps/OpenHCL/map/018.map";
+		SYS_TEMPSAVEPATH = "usb:/apps/OpenHCL/data/save.tmp";
+	}
+	else if (fileExists("usb:/OpenHCL/bmp.qda")) {
+		SYS_DATAPATH 	 = "usb:/OpenHCL/";
+		SYS_INIPATH  	 = "usb:/OpenHCL/system.ini";
+		SYS_SAVEPATH 	 = "usb:/OpenHCL/map/018.map";
+		SYS_TEMPSAVEPATH = "usb:/OpenHCL/data/save.tmp";
+	}
+	else {
+		//sys_Assert("Unable to locate bmp.qda");
+		return 1;
+	}
 
 	return 0;
 }
@@ -54,6 +100,11 @@ void sys_Exit()
 
 	else if (exitCode == 2)
 		SYS_ResetSystem(SYS_HOTRESET, 0, 0);
+}
+
+void sys_Assert(char const* str)
+{
+	
 }
 
 unsigned long sys_GetMillisecond()
