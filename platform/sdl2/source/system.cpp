@@ -7,13 +7,14 @@
 #ifdef _VITA
 #include <psp2/apputil.h>
 #include <psp2/system_param.h>
+#include <psp2/io/stat.h> 
 #endif
 
 #ifdef _VITA
-char const* SYS_DATAPATH 	 = "ux0:data/OpenHCL/";
-char const* SYS_INIPATH  	 = "ux0:data/OpenHCL/system.ini";
-char const* SYS_SAVEPATH 	 = "ux0:data/OpenHCL/map/018.map";
-char const* SYS_TEMPSAVEPATH = "ux0:data/OpenHCL/data/save.tmp";
+char const* SYS_DATAPATH 	 = "app0:/data/";
+char const* SYS_INIPATH  	 = "ux0:/data/OpenHCL/system.ini";
+char const* SYS_SAVEPATH 	 = "ux0:/data/OpenHCL/map/018.map";
+char const* SYS_TEMPSAVEPATH = "ux0:/data/OpenHCL/data/save.tmp";
 #else
 char const* SYS_DATAPATH 	 = "./";
 char const* SYS_INIPATH  	 = "./system.ini";
@@ -35,6 +36,11 @@ int sys_Init()
 	memset(&init, 0, sizeof(SceAppUtilInitParam));
 	memset(&boot, 0, sizeof(SceAppUtilBootParam));
 	sceAppUtilInit(&init, &boot);
+	
+	sceIoMkdir("ux0:/data/", 0777);
+	sceIoMkdir("ux0:/data/OpenHCL/", 0777);
+	sceIoMkdir("ux0:/data/OpenHCL/map/", 0777);
+	sceIoMkdir("ux0:/data/OpenHCL/data/", 0777);
 #endif
 	
 	int ret = SDL_Init(0);

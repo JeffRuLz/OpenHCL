@@ -36,6 +36,7 @@ $(TARGET).vpk: eboot.bin param.sfo
 		--add sce_sys/livearea/contents/bg.png=sce_sys/livearea/contents/bg.png \
 		--add sce_sys/livearea/contents/startup.png=sce_sys/livearea/contents/startup.png \
 		--add sce_sys/livearea/contents/template.xml=sce_sys/livearea/contents/template.xml \
+		--add ../../romfs=data \
 	$(TARGET).vpk
 
 eboot.bin: $(TARGET).velf
