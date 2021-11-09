@@ -60,7 +60,7 @@ static void _setupVideo()
 
 	rmode->viXOrigin = (VI_MAX_WIDTH_NTSC - rmode->viWidth)/2;
 
-	if (isWiiU)
+	if (isWiiU && CONF_GetAspectRatio() == CONF_ASPECT_16_9)
 	{
 		write32(0xd8006a0, 0x30000002);
 		mask32(0xd8006a8, 0, 2);
