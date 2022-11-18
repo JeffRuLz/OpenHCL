@@ -63,7 +63,7 @@ CFLAGS	:=	-g -Wall -O2 -mword-relocations \
 			-fomit-frame-pointer -ffunction-sections \
 			$(ARCH)
 
-CFLAGS	+=	$(INCLUDE) -DARM11 -D_3DS
+CFLAGS	+=	$(INCLUDE) -DARM11 -D__3DS__ -D_3DS
 CFLAGS  += -D_NO_FRAMESKIP -D_NO_LERP -D_NO_EXIT
 #CFLAGS  += -D_DEBUG
 #CFLAGS  += -D_NO_TEMP_SAVE

@@ -8,8 +8,6 @@
 #define SCREEN_HEIGHT 240
 
 static C3D_RenderTarget* fb[3] = { nullptr };
-static C3D_Tex* blankTex = nullptr;
-
 static float scroll_y = 0;
 
 int gfx_Init()
@@ -32,23 +30,11 @@ int gfx_Init()
 	  consoleInit(GFX_BOTTOM, NULL);
 	#endif
 
-	//blank texture for rectangles
-	blankTex = new C3D_Tex;
-	C3D_TexInit(blankTex, 8, 8, GPU_RGBA8);
-	u32* blankPix = (u32*)linearAlloc(8*8*sizeof(u32));
-	for (int i = 0; i < 8*8; i++)
-		blankPix[i] = 0xFFFFFFFF;
-	C3D_TexUpload(blankTex, blankPix);
-	linearFree(blankPix);
-
 	return 0;
 }
 
 void gfx_Exit()
 {
-	C3D_TexDelete(blankTex);
-	blankTex = nullptr;
-
 	C2D_Fini();
 	C3D_Fini();
 	gfxExit();
@@ -286,44 +272,7 @@ void gfx_DrawRect(float x1, float y1, float x2, float y2, Color c)
 	y1 -= scroll_y;
 	y2 -= scroll_y;
 
-	if (x1 < 0) x1 = 0;
-	if (y1 < 0) y1 = 0;
-	if (x2 < 0) x2 = 0;
-	if (y2 < 0) y2 = 0;
-
-	u32 col = C2D_Color32(c.r, c.g, c.b, 0xFF);
-
-	Tex3DS_SubTexture subtex;
-	subtex.width  = 8;
-	subtex.height = 8;
-	subtex.left = 0;
-	subtex.top  = 1;
-	subtex.right  = 0;
-	subtex.bottom = 0;
-
-	C2D_Image img;
-	img.tex = blankTex;
-	img.subtex = &subtex;
-
-	C2D_DrawParams params;
-	params.pos.x = (int)x1;
-	params.pos.y = (int)y1;
-	params.pos.w = x2 - x1;
-	params.pos.h = y2 - y1;
-	params.center.x = 0;
-	params.center.y = 0;
-	params.depth = 0;
-	params.angle = 0;
-
-	C2D_ImageTint tint =
-	{
-		(C2D_Tint){ col, 1.f },
-		(C2D_Tint){ col, 1.f },
-		(C2D_Tint){ col, 1.f },
-		(C2D_Tint){ col, 1.f }
-	};
-
-	C2D_DrawImage(img, &params, &tint);
+	C2D_DrawRectSolid(x1, y1, 0, x2-x1, y2-y1, C2D_Color32(c.r, c.g, c.b, 0xFF));
 }
 
 void gfx_DrawSurface(Surface* s, float x, float y)
