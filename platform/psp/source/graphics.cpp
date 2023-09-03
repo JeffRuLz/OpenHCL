@@ -226,6 +226,40 @@ Surface* gfx_LoadSurface(const char* fname)
 	return s;
 }
 
+static void swizzle(u8* out, const u8* in, unsigned int width, unsigned int height)
+{
+   unsigned int blockx, blocky;
+   unsigned int j;
+ 
+   unsigned int width_blocks = (width / 16);
+   unsigned int height_blocks = (height / 8);
+ 
+   unsigned int src_pitch = (width-16)/4;
+   unsigned int src_row = width * 8;
+ 
+   const u8* ysrc = in;
+   u32* dst = (u32*)out;
+ 
+   for (blocky = 0; blocky < height_blocks; ++blocky)
+   {
+      const u8* xsrc = ysrc;
+      for (blockx = 0; blockx < width_blocks; ++blockx)
+      {
+         const u32* src = (u32*)xsrc;
+         for (j = 0; j < 8; ++j)
+         {
+            *(dst++) = *(src++);
+            *(dst++) = *(src++);
+            *(dst++) = *(src++);
+            *(dst++) = *(src++);
+            src += src_pitch;
+         }
+         xsrc += 16;
+     }
+     ysrc += src_row;
+   }
+}
+
 static inline int powOfTwo(int in)
 {
 	int out = 8;
@@ -241,7 +275,8 @@ Surface* gfx_LoadSurface(FILE* f)
 
 	Bitmap* bmp = nullptr;
 	Surface* s = nullptr;
-	Texture* temp = nullptr;
+	Texture* tex = nullptr;
+	unsigned char* temp = nullptr;
 
 	bmp = loadBitmap(f);
 
@@ -253,9 +288,9 @@ Surface* gfx_LoadSurface(FILE* f)
 	}
 	else
 	{
-		temp = (Texture*)malloc(sizeof(Texture));
+		tex = (Texture*)malloc(sizeof(Texture));
 
-		if (temp == nullptr)
+		if (tex == nullptr)
 		{
 			#ifdef _DEBUG
 			printf("Error creating surface\n");
@@ -266,26 +301,27 @@ Surface* gfx_LoadSurface(FILE* f)
 			s = (Surface*)malloc(sizeof(Surface));
 			s->width = bmp->width;
 			s->height = bmp->height;
-			s->data = temp;
+			s->data = tex;
 
-			temp->format = TEX_FORMAT;
-			temp->mipmap = 0;
-			temp->width = powOfTwo(bmp->width);
-			temp->height = powOfTwo(bmp->height);
-			temp->stride = temp->width;
-			temp->data = (void*)malloc(temp->width*temp->height*2);
+			tex->format = TEX_FORMAT;
+			tex->mipmap = 0;
+			tex->width = powOfTwo(bmp->width);
+			tex->height = powOfTwo(bmp->height);
+			tex->stride = tex->width;
+			tex->data = (void*)malloc(tex->width*tex->height*2);
+			temp = (unsigned char*)malloc(tex->width*tex->height*2);
 
 			//load pixels
 			if (bmp->bitCount == 8)
 			{
 				unsigned char pix, r, g, b;
-				unsigned char* ptr = (unsigned char*)temp->data;
+				unsigned char* ptr = temp;
 				unsigned int col;
 
 				unsigned int i = 0;
-				for (int y = 0; y < temp->height; y++)
+				for (int y = 0; y < tex->height; y++)
 				{
-					for (int x = 0; x < temp->width; x++)
+					for (int x = 0; x < tex->width; x++)
 					{
 						if (x >= s->width || y >= s->height)
 							ptr += 2;
@@ -320,6 +356,9 @@ Surface* gfx_LoadSurface(FILE* f)
 	}
 
 	freeBitmap(bmp);
+
+	swizzle((unsigned char*)tex->data, temp, tex->width*2, tex->height);
+	free(temp);
 
 	return s;
 }
@@ -423,6 +462,7 @@ void gfx_DrawSurfacePart(Surface* s, float x, float y, int cropx, int cropy, int
 	{
 		currentTexture = tex->data;
 
+		sceGuTexMode(COLOR_FORMAT, 0, 0, GU_TRUE);
 		sceGuTexImage(0, tex->width, tex->height, tex->width, tex->data);
 		sceGuTexFunc(GU_TFX_MODULATE, GU_TCC_RGBA);
 		sceGuTexFilter(GU_NEAREST, GU_NEAREST);
@@ -534,6 +574,7 @@ void gfx_DrawTilemap(Tilemap* tm, float x, float y)
 	{
 		currentTexture = tex->data;
 
+		sceGuTexMode(COLOR_FORMAT, 0, 0, GU_TRUE);
 		sceGuTexImage(0, tex->width, tex->height, tex->width, tex->data);
 		sceGuTexFunc(GU_TFX_MODULATE, GU_TCC_RGBA);
 		sceGuTexFilter(GU_NEAREST, GU_NEAREST);
