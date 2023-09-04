@@ -82,7 +82,7 @@ static void drawVertexBuffer()
 	currentTex = nullptr;
 	texCount = 0;
 	
-	vBuf = (Vertex*)sceGuGetMemory(sizeof(Vertex) * 1000);
+	vBuf = (Vertex*)sceGuGetMemory(sizeof(Vertex) * 500);
 }
 
 int gfx_Init()
@@ -422,12 +422,9 @@ void gfx_DrawRect(float x1, float y1, float x2, float y2, Color c)
 	y1 -= scroll_y;
 	y2 -= scroll_y;
 
-	if (currentTex != nullptr)
-		drawVertexBuffer();
+	drawVertexBuffer();
 
-	currentTex = nullptr;
-
-	Vertex* v = &vBuf[texCount];
+	Vertex* v = (Vertex*)sceGuGetMemory(sizeof(Vertex)*2);// &vBuf[texCount];
 
 	v[0].u = 0;
 	v[0].v = 0;
@@ -443,7 +440,8 @@ void gfx_DrawRect(float x1, float y1, float x2, float y2, Color c)
 	v[1].y = y2;
 	v[1].z = 0.f;
 
-	texCount += 2;
+	sceGuDisable(GU_TEXTURE_2D);
+   sceGuDrawArray(GU_SPRITES, GU_TEXTURE_32BITF|GU_COLOR_8888|GU_VERTEX_32BITF|GU_TRANSFORM_2D, 2, NULL, v);
 }
 
 void gfx_DrawSurface(Surface* s, float x, float y)
