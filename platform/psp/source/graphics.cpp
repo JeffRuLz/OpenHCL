@@ -53,7 +53,37 @@ static Texture offscreenTexture;
 static bool fullscreen = false;
 static float scroll_y = 0;
 
-static const void* currentTexture = nullptr;
+static Vertex* vBuf;
+static Texture* currentTex = nullptr;
+static int texCount = 0;
+
+static void drawVertexBuffer()
+{
+	if (texCount <= 0)
+		return;
+
+	if (currentTex == nullptr)
+	{
+		sceGuDisable(GU_TEXTURE_2D);
+	}
+	else
+	{
+		sceGuTexMode(COLOR_FORMAT, 0, 0, GU_TRUE);
+		sceGuTexImage(0, currentTex->width, currentTex->height, currentTex->width, currentTex->data);	
+		sceGuTexFunc(GU_TFX_MODULATE, GU_TCC_RGBA);
+		sceGuTexFilter(GU_NEAREST, GU_NEAREST);
+		sceGuTexScale(1,1);
+		sceGuTexOffset(0,0);
+		sceGuEnable(GU_TEXTURE_2D);
+	}
+
+	sceGuDrawArray(GU_SPRITES, GU_TEXTURE_32BITF | GU_COLOR_8888 | GU_VERTEX_32BITF | GU_TRANSFORM_2D, texCount, NULL, vBuf);
+
+	currentTex = nullptr;
+	texCount = 0;
+	
+	vBuf = (Vertex*)sceGuGetMemory(sizeof(Vertex) * 1000);
+}
 
 int gfx_Init()
 {
@@ -92,15 +122,15 @@ void gfx_Exit()
 
 int gfx_Start()
 {
-	sceDisplayWaitVblankStart();
-	sceGuDisplay(GU_TRUE);
-
 	offscreenTexture.format = COLOR_FORMAT;
 	offscreenTexture.mipmap = 0;
 	offscreenTexture.width  = 512;
 	offscreenTexture.height = 256;
 	offscreenTexture.stride = 512;
 	offscreenTexture.data   = (void*)((int)sceGeEdramGetAddr() + (int)renderTarget);
+
+	sceDisplayWaitVblankStart();
+	sceGuDisplay(GU_TRUE);
 
 	return 0;
 }
@@ -164,11 +194,13 @@ void gfx_FrameStart()
 	sceGuClearDepth(0);
 	sceGuClear(GU_COLOR_BUFFER_BIT|GU_DEPTH_BUFFER_BIT);
 
-	currentTexture = nullptr;
+	vBuf = (Vertex*)sceGuGetMemory(sizeof(Vertex) * 1000);
 }
 
 void gfx_FrameEnd()
 {
+	drawVertexBuffer();
+
 	// set frame buffer
 	sceGuDrawBufferList(COLOR_FORMAT,(void*)frameBuffer,BUF_WIDTH);
 
@@ -390,7 +422,12 @@ void gfx_DrawRect(float x1, float y1, float x2, float y2, Color c)
 	y1 -= scroll_y;
 	y2 -= scroll_y;
 
-	Vertex* v = (Vertex*)sceGuGetMemory(sizeof(Vertex)*2);
+	if (currentTex != nullptr)
+		drawVertexBuffer();
+
+	currentTex = nullptr;
+
+	Vertex* v = &vBuf[texCount];
 
 	v[0].u = 0;
 	v[0].v = 0;
@@ -406,10 +443,7 @@ void gfx_DrawRect(float x1, float y1, float x2, float y2, Color c)
 	v[1].y = y2;
 	v[1].z = 0.f;
 
-	currentTexture = nullptr;
-
-	sceGuDisable(GU_TEXTURE_2D);
-    sceGuDrawArray(GU_SPRITES, GU_TEXTURE_32BITF|GU_COLOR_8888|GU_VERTEX_32BITF|GU_TRANSFORM_2D, 2, NULL, v);
+	texCount += 2;
 }
 
 void gfx_DrawSurface(Surface* s, float x, float y)
@@ -442,7 +476,12 @@ void gfx_DrawSurfacePart(Surface* s, float x, float y, int cropx, int cropy, int
 	y -= scroll_y;
 
 	Texture* tex = (Texture*)s->data;
-	Vertex* v = (Vertex*)sceGuGetMemory(sizeof(Vertex) * 2);
+
+	if (tex != currentTex)
+		drawVertexBuffer();
+	currentTex = tex;
+
+	Vertex* v = &vBuf[texCount];
 
 	v[0].u = cropx;
 	v[0].v = cropy;
@@ -458,20 +497,7 @@ void gfx_DrawSurfacePart(Surface* s, float x, float y, int cropx, int cropy, int
 	v[1].y = (int)y + croph;
 	v[1].z = 0.f;
 
-	if (currentTexture != tex->data)
-	{
-		currentTexture = tex->data;
-
-		sceGuTexMode(COLOR_FORMAT, 0, 0, GU_TRUE);
-		sceGuTexImage(0, tex->width, tex->height, tex->width, tex->data);
-		sceGuTexFunc(GU_TFX_MODULATE, GU_TCC_RGBA);
-		sceGuTexFilter(GU_NEAREST, GU_NEAREST);
-		sceGuTexScale(1,1);
-		sceGuTexOffset(0,0);
-	}
-
-	sceGuEnable(GU_TEXTURE_2D);
-	sceGuDrawArray(GU_SPRITES, GU_TEXTURE_32BITF|GU_COLOR_8888|GU_VERTEX_32BITF|GU_TRANSFORM_2D, 2, NULL, v);
+	texCount += 2;
 }
 
 //
@@ -570,17 +596,12 @@ void gfx_DrawTilemap(Tilemap* tm, float x, float y)
 		v[i].y += y;
 	}
 
-	if (currentTexture != tex->data)
-	{
-		currentTexture = tex->data;
-
-		sceGuTexMode(COLOR_FORMAT, 0, 0, GU_TRUE);
-		sceGuTexImage(0, tex->width, tex->height, tex->width, tex->data);
-		sceGuTexFunc(GU_TFX_MODULATE, GU_TCC_RGBA);
-		sceGuTexFilter(GU_NEAREST, GU_NEAREST);
-		sceGuTexScale(1,1);
-		sceGuTexOffset(0,0);
-	}
+	sceGuTexMode(COLOR_FORMAT, 0, 0, GU_TRUE);
+	sceGuTexImage(0, tex->width, tex->height, tex->width, tex->data);
+	sceGuTexFunc(GU_TFX_MODULATE, GU_TCC_RGBA);
+	sceGuTexFilter(GU_NEAREST, GU_NEAREST);
+	sceGuTexScale(1,1);
+	sceGuTexOffset(0,0);
 
 	sceGuEnable(GU_TEXTURE_2D);
 	sceGuDrawArray(GU_SPRITES, GU_TEXTURE_32BITF|GU_COLOR_8888|GU_VERTEX_32BITF|GU_TRANSFORM_2D, size, NULL, v);
