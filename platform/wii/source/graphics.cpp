@@ -3,6 +3,7 @@
 #include <ogc/tpl.h>
 #include <malloc.h>
 #include <string.h>
+#include <wiidrc/wiidrc.h>
 #include "../../../source/bmp.hpp"
 #include <ogc/machine/processor.h>
 
@@ -43,12 +44,21 @@ static void _setupVideo()
 	u32 xfbHeight;
 	GXColor background = {0, 0, 0, 0xff};
 
-	isWiiVC = read32(0x12FFFFC0);
+	WiiDRC_Init(); // This is called in input.cpp, but calling it again shouldn't hurt anything.
+	isWiiVC = WiiDRC_Inited();
+	//isWiiVC = read32(0x12FFFFC0);
 	isWiiU = ((*(vu16*)0xCD8005A0 == 0xCAFE) || isWiiVC);
 
-	widescreen = (!isWiiU && CONF_GetAspectRatio() == CONF_ASPECT_16_9);
-	progressive = CONF_GetProgressiveScan();
+	widescreen = (CONF_GetAspectRatio() == CONF_ASPECT_16_9);
+	progressive = (CONF_GetProgressiveScan() > 0 && VIDEO_HaveComponentCable());
 	pal = (CONF_GetVideo() != CONF_VIDEO_NTSC);
+
+	if (isWiiU && widescreen)
+	{
+		write32(0xd8006a0, 0x30000002);
+		mask32(0xd8006a8, 0, 2);
+		widescreen = false;
+	}
 
 	if (widescreen)
 	{
@@ -59,12 +69,6 @@ static void _setupVideo()
 	}
 
 	rmode->viXOrigin = (VI_MAX_WIDTH_NTSC - rmode->viWidth)/2;
-
-	if (isWiiU && CONF_GetAspectRatio() == CONF_ASPECT_16_9)
-	{
-		write32(0xd8006a0, 0x30000002);
-		mask32(0xd8006a8, 0, 2);
-	}
 /*
 	// allocate 2 framebuffers for double buffering
 	if (frameBuffer[0] != nullptr)
@@ -222,8 +226,9 @@ void gfx_SetVideoMode(int n)
 			switch (tvmode)
 			{
 				case CONF_VIDEO_NTSC:
+				{
 					rmode = &TVNtsc240Ds;
-					break;
+				} break;
 
 				case CONF_VIDEO_PAL:
 				{
@@ -231,12 +236,13 @@ void gfx_SetVideoMode(int n)
 						rmode = &TVEurgb60Hz240Ds;
 					else
 						rmode = &TVPal264Ds;
-				}
-				break;
+				} break;
 
 				case CONF_VIDEO_MPAL:
+				{
 					rmode = &TVMpal240Ds;
-			}
+				} break;
+			};
 
 			break;
 		}
@@ -246,8 +252,9 @@ void gfx_SetVideoMode(int n)
 			switch (tvmode)
 			{
 				case CONF_VIDEO_NTSC:
+				{
 					rmode = &TVNtsc480IntDf;
-					break;
+				} break;
 
 				case CONF_VIDEO_PAL:
 				{
@@ -255,11 +262,12 @@ void gfx_SetVideoMode(int n)
 						rmode = &TVEurgb60Hz480IntDf;
 					else
 						rmode = &TVPal576IntDfScale;
-				}
-				break;
+				} break;
 
 				case CONF_VIDEO_MPAL:
+				{
 					rmode = &TVMpal480IntDf;
+				} break;
 			}
 
 			break;
@@ -270,8 +278,9 @@ void gfx_SetVideoMode(int n)
 			switch (tvmode)
 			{
 				case CONF_VIDEO_NTSC:
+				{
 					rmode = &TVNtsc480Prog;
-					break;
+				} break;
 
 				case CONF_VIDEO_PAL:
 				{
@@ -279,11 +288,12 @@ void gfx_SetVideoMode(int n)
 						rmode = &TVEurgb60Hz480Prog;
 					else
 						rmode = &TVPal576ProgScale;
-				}
-				break;
+				} break;
 
 				case CONF_VIDEO_MPAL:
+				{
 					rmode = &TVMpal480Prog;
+				} break;
 			}
 
 			break;
