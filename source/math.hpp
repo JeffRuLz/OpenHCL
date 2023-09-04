@@ -21,5 +21,5 @@
 #ifdef _NO_LERP
 #define lerp(X,Y,Z) (X)
 #else
-#define lerp(X,Y,Z) ( (1.f - (Z)) * (Y) + (Z) * (X) )
+#define lerp(X,Y,Z) ( ((X) == (Y))? (X): ((1.f - (Z)) * (Y) + (Z) * (X)) )
 #endif
