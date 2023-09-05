@@ -21,8 +21,8 @@ int sys_Init()
 {
 	setupCallbacks();
 
-//	if (scePowerGetCpuClockFrequency() < 266)
-//		scePowerSetClockFrequency(266,266,133);
+	if (scePowerGetCpuClockFrequency() < 266)
+		scePowerSetClockFrequency(266,266,133);
 
 	return 0;
 }
